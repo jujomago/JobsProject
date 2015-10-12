@@ -1,12 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="Prueba" />
-    <item android:id="@+id/action_settings2"
-        android:orderInCategory="100"
-        android:title="Segundo" />
-    <item android:id="@+id/action_settings3"
-        android:orderInCategory="100"
-        android:title="Tercero"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jopc.sandbox.MainActivity" >
+
+    <item
+        android:id="@+id/add"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:title="Add"
+       />
+    <item
+        android:id="@+id/update"
+        android:orderInCategory="2"
+        app:showAsAction="always"
+        android:title="Update"
+       />
+    <item
+        android:id="@+id/delete"
+        android:orderInCategory="3"
+        app:showAsAction="always"
+        android:title="Delete"
+       />
+    <item
+        android:id="@+id/info"
+        android:orderInCategory="4"
+        app:showAsAction="never"
+        android:title="Info"
+        />
+
 </menu>

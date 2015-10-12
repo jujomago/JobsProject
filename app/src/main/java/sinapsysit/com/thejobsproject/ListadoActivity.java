@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -20,6 +23,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
+import sinapsysit.com.thejobsproject.adapters.MyCustomAdapter;
 import sinapsysit.com.thejobsproject.pojos.JobPost;
 
 public class ListadoActivity extends AppCompatActivity {
@@ -27,16 +31,17 @@ public class ListadoActivity extends AppCompatActivity {
     static final String URLPOSTS="http://dipandroid-ucb.herokuapp.com/work_posts.json";
     ArrayList<JobPost> posts_array;
     ListView lista_jobs;
-    ArrayAdapter<JobPost> lista_adapter;
+    MyCustomAdapter lista_adapter;
+//    ArrayAdapter<JobPost> lista_adapter;
     ArrayAdapter<String> lista_adapter2;
-    ArrayList<String> posts_array2;
+//    ArrayList<String> posts_array2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado);
         posts_array=new ArrayList<>();
-        posts_array2=new ArrayList<>();
+//        posts_array2=new ArrayList<>();
         createComponents();
         cargarLista();
 
@@ -44,8 +49,23 @@ public class ListadoActivity extends AppCompatActivity {
 
     private void createComponents() {
         lista_jobs= (ListView) findViewById(R.id.listajobs);
-        lista_adapter=new ArrayAdapter<>(getBaseContext(),android.R.layout.simple_list_item_1,posts_array);
+
+        lista_adapter=new MyCustomAdapter(getBaseContext(),R.layout.list_item,posts_array);
+
+//      lista_adapter=new ArrayAdapter<>(getBaseContext(),android.R.layout.simple_list_item_2,android.R.id.text1,posts_array);
         lista_jobs.setAdapter(lista_adapter);
+
+        lista_jobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView caja1= (TextView) view.findViewById(R.id.textito1);
+
+                Toast.makeText(getApplicationContext(),caja1.getText(),Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
     }
 
     private void cargarLista(){
@@ -89,6 +109,7 @@ public class ListadoActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+/*
 
         switch (item.getItemId()){
             case R.id.action_settings:
@@ -101,6 +122,7 @@ public class ListadoActivity extends AppCompatActivity {
                 Toast.makeText(this,"Tercera Opcion",Toast.LENGTH_SHORT).show();
 
         }
+*/
 
         return true;
     }
