@@ -1,32 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.jopc.sandbox.MainActivity" >
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/add"
+        android:id="@+id/sincronizar"
         android:orderInCategory="1"
-        app:showAsAction="always"
-        android:title="Add"
+        yourapp:showAsAction="never"
+        android:title="Sincronizar"
        />
     <item
-        android:id="@+id/update"
+        android:id="@+id/postear"
         android:orderInCategory="2"
-        app:showAsAction="always"
-        android:title="Update"
+        yourapp:showAsAction="never"
+        android:title="Postear Trabajo"
        />
-    <item
-        android:id="@+id/delete"
-        android:orderInCategory="3"
-        app:showAsAction="always"
-        android:title="Delete"
-       />
-    <item
-        android:id="@+id/info"
-        android:orderInCategory="4"
-        app:showAsAction="never"
-        android:title="Info"
-        />
-
 </menu>

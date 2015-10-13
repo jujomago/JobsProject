@@ -1,9 +1,11 @@
 package sinapsysit.com.thejobsproject.pojos;
 
+import java.io.Serializable;
+
 /**
  * Created by jujomago on 11/10/2015.
  */
-public class JobPost {
+public class JobPost implements Serializable {
     private int id;
     private String title;
     private String postDate;
@@ -23,13 +25,13 @@ public class JobPost {
 
     @Override
     public String toString() {
-   /*     return "JobPost{" +
+       return "JobPost{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", postDate='" + postDate + '\'' +
                 ", description='" + description + '\'' +
-                '}';*/
-        return "lalal "+title;
+                '}';
+
     }
 
     public int getId() {

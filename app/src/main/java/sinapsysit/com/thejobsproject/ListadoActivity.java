@@ -1,5 +1,8 @@
 package sinapsysit.com.thejobsproject;
 
+import android.app.ActionBar;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +27,7 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 import sinapsysit.com.thejobsproject.adapters.MyCustomAdapter;
+import sinapsysit.com.thejobsproject.data.JobsDbHelper;
 import sinapsysit.com.thejobsproject.pojos.JobPost;
 
 public class ListadoActivity extends AppCompatActivity {
@@ -35,15 +39,23 @@ public class ListadoActivity extends AppCompatActivity {
 //    ArrayAdapter<JobPost> lista_adapter;
     ArrayAdapter<String> lista_adapter2;
 //    ArrayList<String> posts_array2;
+    SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
         posts_array=new ArrayList<>();
 //        posts_array2=new ArrayList<>();
         createComponents();
         cargarLista();
+        JobsDbHelper jobs_db_helper=new JobsDbHelper(this,"jobsDB",null);
+        db = jobs_db_helper.getWritableDatabase();
 
     }
 
@@ -58,9 +70,13 @@ public class ListadoActivity extends AppCompatActivity {
         lista_jobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView caja1= (TextView) view.findViewById(R.id.textito1);
+                Bundle b=new Bundle();
+                b.putSerializable("job_selected", posts_array.get(position));
 
-                Toast.makeText(getApplicationContext(),caja1.getText(),Toast.LENGTH_SHORT).show();
+                Intent myintent=new Intent(getApplicationContext(),DetalleActivity.class);
+                myintent.putExtras(b);
+
+                startActivity(myintent);
             }
         });
 
@@ -104,25 +120,23 @@ public class ListadoActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menuapp, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-/*
-
         switch (item.getItemId()){
-            case R.id.action_settings:
+
+            case R.id.sincronizar:
                 Toast.makeText(this, "Primera Opcion", Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.action_settings2:
-                Toast.makeText(this,"Segunda Opcion",Toast.LENGTH_SHORT).show();
+            case R.id.postear:
+                Intent myintent=new Intent(this,DetalleActivity.class);
+                startActivity(myintent);
                 break;
             default:
-                Toast.makeText(this,"Tercera Opcion",Toast.LENGTH_SHORT).show();
-
+                return super.onOptionsItemSelected(item);
         }
-*/
 
         return true;
     }
