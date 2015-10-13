@@ -1,7 +1,8 @@
 package sinapsysit.com.thejobsproject;
 
-import android.app.ActionBar;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,11 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -27,45 +24,39 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 import sinapsysit.com.thejobsproject.adapters.MyCustomAdapter;
+import sinapsysit.com.thejobsproject.data.JobsDBContants.JobDbData;
 import sinapsysit.com.thejobsproject.data.JobsDbHelper;
 import sinapsysit.com.thejobsproject.pojos.JobPost;
 
 public class ListadoActivity extends AppCompatActivity {
 
-    static final String URLPOSTS="http://dipandroid-ucb.herokuapp.com/work_posts.json";
-    ArrayList<JobPost> posts_array;
+    private static final String URLPOSTS="http://dipandroid-ucb.herokuapp.com/work_posts.json";
+    private ArrayList<JobPost> posts_array;
+    private MyCustomAdapter customAdapter;
+
     ListView lista_jobs;
-    MyCustomAdapter lista_adapter;
-//    ArrayAdapter<JobPost> lista_adapter;
-    ArrayAdapter<String> lista_adapter2;
-//    ArrayList<String> posts_array2;
+
+    JobsDbHelper jobs_db_helper;
     SQLiteDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         posts_array=new ArrayList<>();
-//        posts_array2=new ArrayList<>();
-        createComponents();
-        cargarLista();
-        JobsDbHelper jobs_db_helper=new JobsDbHelper(this,"jobsDB",null);
-        db = jobs_db_helper.getWritableDatabase();
 
+        jobs_db_helper=new JobsDbHelper(this,"jobsDB",null);
+        createComponents();
+        fillListViewFromDB();
     }
 
     private void createComponents() {
         lista_jobs= (ListView) findViewById(R.id.listajobs);
 
-        lista_adapter=new MyCustomAdapter(getBaseContext(),R.layout.list_item,posts_array);
-
-//      lista_adapter=new ArrayAdapter<>(getBaseContext(),android.R.layout.simple_list_item_2,android.R.id.text1,posts_array);
-        lista_jobs.setAdapter(lista_adapter);
+        customAdapter =new MyCustomAdapter(getBaseContext(),R.layout.list_item,posts_array);
+        lista_jobs.setAdapter(customAdapter);
 
         lista_jobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,43 +70,8 @@ public class ListadoActivity extends AppCompatActivity {
                 startActivity(myintent);
             }
         });
-
-
-
     }
 
-    private void cargarLista(){
-        AsyncHttpClient cliente=new AsyncHttpClient();
-
-        cliente.get(URLPOSTS,new JsonHttpResponseHandler(){
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-                for (int i = 0; i < response.length(); i++) {
-                    JobPost jobPost = new JobPost();
-                    try {
-                        JSONObject jsonobject = response.getJSONObject(i);
-                        jobPost.setId(jsonobject.getInt("id"));
-                        jobPost.setTitle(jsonobject.getString("title"));
-                        jobPost.setPostDate(jsonobject.getString("posted_date"));
-                        jobPost.setDescription(jsonobject.getString("description"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    posts_array.add(jobPost);
-//                    posts_array2.add(jobPost.getTitle());
-      /*              System.out.println("SIZE ONsUcESS:");
-                    System.out.println(posts_array2.size());*/
-                }
-                lista_adapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("onFailure", "onFailure", throwable);
-            }
-        });
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -128,7 +84,7 @@ public class ListadoActivity extends AppCompatActivity {
         switch (item.getItemId()){
 
             case R.id.sincronizar:
-                Toast.makeText(this, "Primera Opcion", Toast.LENGTH_SHORT).show();
+                sincronizarData();
                 break;
             case R.id.postear:
                 Intent myintent=new Intent(this,DetalleActivity.class);
@@ -141,5 +97,65 @@ public class ListadoActivity extends AppCompatActivity {
         return true;
     }
 
+    private void sincronizarData() {
+        saveJSONToDatabse();
+    }
 
+    private void saveJSONToDatabse() {
+        db = jobs_db_helper.getWritableDatabase();
+        AsyncHttpClient cliente=new AsyncHttpClient();
+        cliente.get(URLPOSTS, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        JSONObject jsonobject = response.getJSONObject(i);
+
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put(JobDbData._ID, jsonobject.getInt("id"));
+                        contentValues.put(JobDbData.COLUMN_TITLE, jsonobject.getString("title"));
+                        contentValues.put(JobDbData.COLUMN_DESCRIPTION, jsonobject.getString("description"));
+                        contentValues.put(JobDbData.COLUMN_POSTED_DATE, jsonobject.getString("posted_date"));
+
+                        db.insert(JobDbData.TABLE_NAME, null, contentValues);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                db.close();
+                fillListViewFromDB();
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                Log.d("onFailure", "onFailure", throwable);
+            }
+        });
+    }
+
+    private void fillListViewFromDB() {
+        db = jobs_db_helper.getReadableDatabase();
+
+        String [] columnas={JobDbData._ID,JobDbData.COLUMN_TITLE,JobDbData.COLUMN_DESCRIPTION,JobDbData.COLUMN_POSTED_DATE};
+
+        Cursor cursor=db.query(JobDbData.TABLE_NAME, columnas, null, null, null, null, JobDbData._ID + " ASC");
+
+        if(cursor.getCount()>0){
+            customAdapter.clear();
+        }
+
+        while (cursor.moveToNext()){
+            JobPost jobPostTemp=new JobPost();
+            jobPostTemp.setId(cursor.getInt(0));
+            jobPostTemp.setTitle(cursor.getString(1));
+            jobPostTemp.setDescription(cursor.getString(2));
+            jobPostTemp.setPostDate(cursor.getString(3));
+
+            posts_array.add(jobPostTemp);
+//            customAdapter.add(jobPostTemp);
+        }
+        db.close();
+    }
 }
