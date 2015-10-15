@@ -19,10 +19,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DetalleActivity"  android:label="Detalle"  android:parentActivityName=".ListadoActivity">
+        <activity
+            android:name=".DetalleActivity"
+            android:label="Detalle"
+            android:parentActivityName=".ListadoActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sinapsysit.com.thejobsproject.ListadoActivity" />
+        </activity>
+        <activity android:name=".NuevoJobActivity"  android:label="Postear Trabajo" android:parentActivityName=".ListadoActivity">
         </activity>
     </application>
 

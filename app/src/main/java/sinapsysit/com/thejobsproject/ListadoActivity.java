@@ -49,7 +49,7 @@ public class ListadoActivity extends AppCompatActivity {
 
         jobs_db_helper=new JobsDbHelper(this,"jobsDB",null);
         createComponents();
-        fillListViewFromDB();
+        saveJSONToDatabse();
     }
 
     private void createComponents() {
@@ -87,7 +87,7 @@ public class ListadoActivity extends AppCompatActivity {
                 sincronizarData();
                 break;
             case R.id.postear:
-                Intent myintent=new Intent(this,DetalleActivity.class);
+                Intent myintent=new Intent(this,NuevoJobActivity.class);
                 startActivity(myintent);
                 break;
             default:
