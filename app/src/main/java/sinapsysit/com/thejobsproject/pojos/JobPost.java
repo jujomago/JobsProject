@@ -10,7 +10,7 @@ public class JobPost implements Serializable {
     private String title;
     private String postDate;
     private String description;
-
+    private String[] contacts;
 
     public JobPost(int id, String title, String postDate, String description) {
         this.id = id;
@@ -21,6 +21,14 @@ public class JobPost implements Serializable {
 
     public JobPost() {
 
+    }
+
+    public String[] getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(String[] contacts) {
+        this.contacts = contacts;
     }
 
     @Override
@@ -65,4 +73,6 @@ public class JobPost implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

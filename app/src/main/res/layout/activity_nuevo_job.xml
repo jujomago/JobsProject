@@ -48,6 +48,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/txtContacto" />
 
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Puedes serparar los numeros de contactos por comas &quot;,&quot;"
+        android:id="@+id/textView5"
+        android:layout_gravity="center_horizontal" />
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -20,10 +20,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 import sinapsysit.com.thejobsproject.adapters.MyCustomAdapter;
+import sinapsysit.com.thejobsproject.data.JobsDBContants;
+import sinapsysit.com.thejobsproject.data.JobsDBContants.ContactDbData;
 import sinapsysit.com.thejobsproject.data.JobsDBContants.JobDbData;
 import sinapsysit.com.thejobsproject.data.JobsDbHelper;
 import sinapsysit.com.thejobsproject.pojos.JobPost;
@@ -61,10 +65,10 @@ public class ListadoActivity extends AppCompatActivity {
         lista_jobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Bundle b=new Bundle();
+                Bundle b = new Bundle();
                 b.putSerializable("job_selected", posts_array.get(position));
 
-                Intent myintent=new Intent(getApplicationContext(),DetalleActivity.class);
+                Intent myintent = new Intent(getApplicationContext(), DetalleActivity.class);
                 myintent.putExtras(b);
 
                 startActivity(myintent);
@@ -118,7 +122,25 @@ public class ListadoActivity extends AppCompatActivity {
                         contentValues.put(JobDbData.COLUMN_DESCRIPTION, jsonobject.getString("description"));
                         contentValues.put(JobDbData.COLUMN_POSTED_DATE, jsonobject.getString("posted_date"));
 
-                        db.insert(JobDbData.TABLE_NAME, null, contentValues);
+
+                        long newid=db.insert(JobDbData.TABLE_NAME, null, contentValues);
+
+                        if(newid>0){
+
+                            JSONArray jsonArray=jsonobject.getJSONArray("contacts");
+                            for (int k = 0; k < jsonArray.length(); k++) {
+                                String numerocontact=jsonArray.getString(k);
+                                ContentValues contentValues2 = new ContentValues();
+                                contentValues2.put(ContactDbData.COLUMN_JOB_ID,jsonobject.getInt("id"));
+                                contentValues2.put(ContactDbData.COLUMN_NUMBER, numerocontact);
+                                long newidc=db.insert(ContactDbData.TABLE_NAME, null, contentValues2);
+//                                System.out.println("Insertado:"+newidc);
+                            }
+                        }else{
+                            System.out.println("Ocurrio un error al Insertar a la BD");
+                        }
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -126,6 +148,7 @@ public class ListadoActivity extends AppCompatActivity {
                 }
                 db.close();
                 fillListViewFromDB();
+
             }
 
             @Override
@@ -152,6 +175,17 @@ public class ListadoActivity extends AppCompatActivity {
             jobPostTemp.setTitle(cursor.getString(1));
             jobPostTemp.setDescription(cursor.getString(2));
             jobPostTemp.setPostDate(cursor.getString(3));
+
+
+            String[] columnas_contacts={ContactDbData._ID,ContactDbData.COLUMN_JOB_ID,ContactDbData.COLUMN_NUMBER};
+            Cursor cursor_contacts=db.query(ContactDbData.TABLE_NAME, columnas_contacts, ContactDbData.COLUMN_JOB_ID+"=?", new String[]{String.valueOf(jobPostTemp.getId())}, null, null, ContactDbData._ID + " ASC");
+            ArrayList<String> numbers_for_job=new ArrayList<>();
+
+            while (cursor_contacts.moveToNext()){
+                numbers_for_job.add(cursor_contacts.getString(2));
+            }
+
+            jobPostTemp.setContacts(numbers_for_job.toArray(new String[numbers_for_job.size()]));
 
             posts_array.add(jobPostTemp);
 //            customAdapter.add(jobPostTemp);

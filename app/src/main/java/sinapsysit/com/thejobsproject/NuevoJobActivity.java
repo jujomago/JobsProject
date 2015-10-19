@@ -2,8 +2,7 @@ package sinapsysit.com.thejobsproject;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,20 +12,18 @@ import android.widget.EditText;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.*;
+
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import cz.msebera.android.httpclient.message.BasicHeader;
 import cz.msebera.android.httpclient.protocol.HTTP;
-import sinapsysit.com.thejobsproject.data.JobsDbHelper;
 
 public class NuevoJobActivity extends AppCompatActivity {
     EditText txt_titulo,txt_descripcion,txt_contactos;
@@ -63,18 +60,27 @@ public class NuevoJobActivity extends AppCompatActivity {
         data_contacts=txt_contactos.getText().toString();
 
 
+
+
         JSONObject posjson=new JSONObject();
         posjson.put("title",data_titulo);
-        posjson.put("description",data_desc);
-//        posjson.put("contacts",data_titulo);
+        posjson.put("description", data_desc);
+
+        posjson.put("contacts", new JSONArray(Arrays.toString(data_contacts.split(","))));
 
         JSONObject mydata=new JSONObject();
         mydata.put("work_post", posjson);
 
+
+        System.out.println(Arrays.toString(data_contacts.split(",")));
+        System.out.println("EL JSON A ENVIAR");
+        System.out.println(mydata.toString());
+
+
         StringEntity entity=new StringEntity(mydata.toString());
         entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
-        cliente.post(this,URLPOSTS,entity,"application/json",new JsonHttpResponseHandler(){
+     cliente.post(this,URLPOSTS,entity,"application/json",new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
