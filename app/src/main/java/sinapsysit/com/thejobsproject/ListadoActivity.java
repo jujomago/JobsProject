@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -36,7 +38,8 @@ public class ListadoActivity extends AppCompatActivity {
 
     private static final String URLPOSTS="http://dipandroid-ucb.herokuapp.com/work_posts.json";
     private ArrayList<JobPost> posts_array;
-    private MyCustomAdapter customAdapter;
+//    private MyCustomAdapter customAdapter;
+    private SimpleCursorAdapter mysimple_adapter;
 
     ListView lista_jobs;
 
@@ -47,7 +50,6 @@ public class ListadoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         posts_array=new ArrayList<>();
 
@@ -58,10 +60,6 @@ public class ListadoActivity extends AppCompatActivity {
 
     private void createComponents() {
         lista_jobs= (ListView) findViewById(R.id.listajobs);
-
-        customAdapter =new MyCustomAdapter(getBaseContext(),R.layout.list_item,posts_array);
-        lista_jobs.setAdapter(customAdapter);
-
         lista_jobs.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,7 +120,6 @@ public class ListadoActivity extends AppCompatActivity {
                         contentValues.put(JobDbData.COLUMN_DESCRIPTION, jsonobject.getString("description"));
                         contentValues.put(JobDbData.COLUMN_POSTED_DATE, jsonobject.getString("posted_date"));
 
-
                         long newid=db.insert(JobDbData.TABLE_NAME, null, contentValues);
 
                         if(newid>0){
@@ -162,12 +159,13 @@ public class ListadoActivity extends AppCompatActivity {
         db = jobs_db_helper.getReadableDatabase();
 
         String [] columnas={JobDbData._ID,JobDbData.COLUMN_TITLE,JobDbData.COLUMN_DESCRIPTION,JobDbData.COLUMN_POSTED_DATE};
-
         Cursor cursor=db.query(JobDbData.TABLE_NAME, columnas, null, null, null, null, JobDbData._ID + " ASC");
 
-        if(cursor.getCount()>0){
-            customAdapter.clear();
-        }
+        String [] from={JobDbData.COLUMN_TITLE,JobDbData.COLUMN_POSTED_DATE};
+        int [] to={R.id.textito1,R.id.textito2};
+
+        mysimple_adapter = new SimpleCursorAdapter(this, R.layout.list_item,cursor,from,to,0);
+        lista_jobs.setAdapter(mysimple_adapter);
 
         while (cursor.moveToNext()){
             JobPost jobPostTemp=new JobPost();
@@ -175,20 +173,8 @@ public class ListadoActivity extends AppCompatActivity {
             jobPostTemp.setTitle(cursor.getString(1));
             jobPostTemp.setDescription(cursor.getString(2));
             jobPostTemp.setPostDate(cursor.getString(3));
-
-
-            String[] columnas_contacts={ContactDbData._ID,ContactDbData.COLUMN_JOB_ID,ContactDbData.COLUMN_NUMBER};
-            Cursor cursor_contacts=db.query(ContactDbData.TABLE_NAME, columnas_contacts, ContactDbData.COLUMN_JOB_ID+"=?", new String[]{String.valueOf(jobPostTemp.getId())}, null, null, ContactDbData._ID + " ASC");
-            ArrayList<String> numbers_for_job=new ArrayList<>();
-
-            while (cursor_contacts.moveToNext()){
-                numbers_for_job.add(cursor_contacts.getString(2));
-            }
-
-            jobPostTemp.setContacts(numbers_for_job.toArray(new String[numbers_for_job.size()]));
-
+            jobPostTemp.setContacts(db,jobPostTemp.getId());
             posts_array.add(jobPostTemp);
-//            customAdapter.add(jobPostTemp);
         }
         db.close();
     }
