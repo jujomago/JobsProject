@@ -29,6 +29,9 @@
         </activity>
         <activity android:name=".NuevoJobActivity"  android:label="Postear Trabajo" android:parentActivityName=".ListadoActivity">
         </activity>
+        <provider
+            android:authorities="sinapsysit.com.thejobsproject"
+            android:name=".data.JobsContentProvider" android:enabled="true" android:exported="true"></provider>
     </application>
 
 </manifest>

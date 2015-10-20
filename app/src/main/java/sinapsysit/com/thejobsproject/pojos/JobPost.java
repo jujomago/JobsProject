@@ -1,5 +1,6 @@
 package sinapsysit.com.thejobsproject.pojos;
 
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -34,12 +35,13 @@ public class JobPost implements Serializable {
         return contacts;
     }
 
-    public void setContacts(SQLiteDatabase db,int current_job_id) {
+    public void setContacts(ContentResolver cr,int current_job_id) {
+
         String[] columnas_contacts={ContactDbData._ID, ContactDbData.COLUMN_JOB_ID, ContactDbData.COLUMN_NUMBER};
         String[] whereArgs={current_job_id+""};
 
 
-        Cursor cursor_contacts=db.query(ContactDbData.TABLE_NAME, columnas_contacts, ContactDbData.COLUMN_JOB_ID+"=?", whereArgs, null, null, ContactDbData._ID + " ASC");
+        Cursor cursor_contacts=cr.query(ContactDbData.CONTENT_URI, columnas_contacts, ContactDbData.COLUMN_JOB_ID+"=?", whereArgs,  ContactDbData._ID + " ASC");
         contacts=new String[cursor_contacts.getCount()];
 
         for (int i = 0; i < cursor_contacts.getCount(); i++) {
@@ -92,7 +94,4 @@ public class JobPost implements Serializable {
         this.description = description;
     }
 
-    public void setContacts() {
-
-    }
 }
