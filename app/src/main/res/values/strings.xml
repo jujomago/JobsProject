@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">TheJobsProject</string>
+    <string name="textoSincro">Sincronizar</string>
+    <string name="textoPostear">Postear Nuevo Trabajo</string>
+    <string name="LabelListadoAct">Encuentra Trabajo</string>
+    <string name="labelDetailAct">Detalle del Trabajo</string>
+    <string name="textPostNewJob">Postear Trabajo</string>
+    <string name="subtitleContactos">Contactos:</string>
+    <string name="labelTituloInput">Titulo del Trabajo</string>
+    <string name="labelDesc">Descripcion</string>
+    <string name="labelContactos">Numeros de Contacto</string>
+    <string name="btnSave">Guardar Trabajo</string>
 </resources>

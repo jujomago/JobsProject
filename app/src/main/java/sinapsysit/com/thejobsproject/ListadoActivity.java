@@ -1,9 +1,10 @@
 package sinapsysit.com.thejobsproject;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -34,8 +36,7 @@ public class ListadoActivity extends AppCompatActivity {
     private ArrayList<JobPost> posts_array;
 
     ListView lista_jobs;
-
-
+    SimpleCursorAdapter mysimple_adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,11 @@ public class ListadoActivity extends AppCompatActivity {
     }
 
     private void sincronizarData() {
+
+        posts_array.clear();
+        lista_jobs.setAdapter(null);
         saveJSONToDatabse();
+
     }
 
     private void saveJSONToDatabse() {
@@ -132,13 +137,18 @@ public class ListadoActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
-                Log.d("onFailure", "onFailure", throwable);
+//                Log.d("onFailure", "onFailure", throwable);
+                Log.i("Error !","Ocurrio un error al conectarse al servidor!");
+//                Toast.makeText(ListadoActivity.class,"")
+                AlertDialog.Builder builder=new AlertDialog.Builder(ListadoActivity.this);
+                builder.setTitle("Error !").setMessage("Ocurrio un error al conectarse al servidor!");
             }
+
+
         });
     }
 
     private void fillListViewFromDB() {
-
 
         String [] columnas={JobDbData._ID,JobDbData.COLUMN_TITLE,JobDbData.COLUMN_DESCRIPTION,JobDbData.COLUMN_POSTED_DATE};
 
@@ -147,7 +157,8 @@ public class ListadoActivity extends AppCompatActivity {
         String [] from={JobDbData.COLUMN_TITLE,JobDbData.COLUMN_POSTED_DATE};
         int [] to={R.id.textito1,R.id.textito2};
 
-        SimpleCursorAdapter mysimple_adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to, 0);
+        mysimple_adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to, 0);
+
         lista_jobs.setAdapter(mysimple_adapter);
 
         while (cursor.moveToNext()){
@@ -161,6 +172,7 @@ public class ListadoActivity extends AppCompatActivity {
 
             posts_array.add(jobPostTemp);
         }
+//        cursor.close();
 
     }
 }

@@ -48,7 +48,7 @@ public class JobPost implements Serializable {
             cursor_contacts.moveToNext();
             contacts[i]=cursor_contacts.getString(2);
         }
-
+       cursor_contacts.close();
     }
 
     @Override

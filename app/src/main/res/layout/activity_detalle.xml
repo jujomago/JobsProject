@@ -13,7 +13,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Aqui va ir el Titulo"
         android:id="@+id/txtTitulo"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        style="@style/legible_padding" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,14 +22,16 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Aqui va ir todo el detalle del texto, este es un ejemplo largo de como quedaria si el texto se extiende mucho"
         android:id="@+id/txtDetalle"
-        android:layout_gravity="center_horizontal" />
+        android:layout_gravity="center_horizontal"
+        style="@style/legible_padding" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="CONTACTOS :"
-        android:id="@+id/textView3" />
+        android:text="@string/subtitleContactos"
+        android:id="@+id/textView3"
+        style="@style/legible_padding" />
 
     <ListView
         android:layout_width="match_parent"

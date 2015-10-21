@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ListadoActivity"
-            android:label="Encuentra Trabajo" >
+            android:label="@string/LabelListadoAct" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,17 +21,17 @@
         </activity>
         <activity
             android:name=".DetalleActivity"
-            android:label="Detalle"
+            android:label="@string/labelDetailAct"
             android:parentActivityName=".ListadoActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sinapsysit.com.thejobsproject.ListadoActivity" />
         </activity>
-        <activity android:name=".NuevoJobActivity"  android:label="Postear Trabajo" android:parentActivityName=".ListadoActivity">
+        <activity android:name=".NuevoJobActivity"  android:label="@string/textPostNewJob" android:parentActivityName=".ListadoActivity">
         </activity>
         <provider
             android:authorities="sinapsysit.com.thejobsproject"
-            android:name=".data.JobsContentProvider" android:enabled="true" android:exported="true"></provider>
+            android:name=".data.JobsContentProvider" android:enabled="true" android:exported="true"/>
     </application>
 
 </manifest>

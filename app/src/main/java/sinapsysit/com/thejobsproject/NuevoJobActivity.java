@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -27,6 +28,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class NuevoJobActivity extends AppCompatActivity {
     EditText txt_titulo,txt_descripcion,txt_contactos;
+    Button button_save;
     private static final String URLPOSTS="http://dipandroid-ucb.herokuapp.com/work_posts.json";
 
 
@@ -38,7 +40,7 @@ public class NuevoJobActivity extends AppCompatActivity {
         txt_descripcion= (EditText) findViewById(R.id.txtDescripcion);
         txt_contactos= (EditText) findViewById(R.id.txtContacto);
 
-
+        button_save=(Button) findViewById(R.id.buttonSave);
     }
 
     @Override
@@ -53,6 +55,9 @@ public class NuevoJobActivity extends AppCompatActivity {
     }
 
     public void saveJob(View view) throws JSONException, UnsupportedEncodingException {
+
+        button_save.setEnabled(false);
+
         AsyncHttpClient cliente=new AsyncHttpClient();
         String data_titulo,data_desc,data_contacts;
         data_titulo=txt_titulo.getText().toString();
@@ -107,6 +112,7 @@ public class NuevoJobActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 Log.d("onFailure", "onFailure", throwable);
+                button_save.setEnabled(true);
             }
 
         });

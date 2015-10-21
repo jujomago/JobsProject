@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Titulo:"
+        android:text="@string/labelTituloInput"
         android:id="@+id/textView" />
 
     <EditText
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Descripcion :"
+        android:text="@string/labelDesc"
         android:id="@+id/textView2" />
 
     <EditText
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Contactos:"
+        android:text="@string/labelContactos"
         android:id="@+id/textView4" />
 
     <EditText
@@ -59,8 +59,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Postear !"
-        android:id="@+id/button"
+        android:text="@string/btnSave"
+        android:id="@+id/buttonSave"
         android:layout_gravity="center_horizontal"
         android:onClick="saveJob" />
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TheJobsProject</string>
+    <string name="textoSincro">Sync</string>
+    <string name="textoPostear">Post New Job</string>
+    <string name="LabelListadoAct">Find a Job</string>
+    <string name="labelDetailAct">Detail of Job</string>
+    <string name="textPostNewJob">Post New Job</string>
+    <string name="subtitleContactos">Contacts :</string>
+    <string name="labelTituloInput">Titulo of Job</string>
+    <string name="labelDesc">Description</string>
+    <string name="labelContactos">Contact Numbers</string>
+    <string name="btnSave">Save the Job</string>
+</resources>

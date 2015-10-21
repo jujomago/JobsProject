@@ -9,7 +9,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Esta es una prueba de como se vera el titulo"
         android:id="@+id/textito1"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:textColor="#d0e591" />
 
     <TextView
         android:layout_width="match_parent"
@@ -18,5 +19,6 @@
         android:text="8/8/88"
         android:id="@+id/textito2"
         android:textAlignment="gravity"
-        android:gravity="right" />
+        android:gravity="right"
+        android:textColor="#5dbcf3" />
 </LinearLayout>
