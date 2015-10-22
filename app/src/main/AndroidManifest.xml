@@ -6,12 +6,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/casebag"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".ListadoActivity"
+
             android:label="@string/LabelListadoAct" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

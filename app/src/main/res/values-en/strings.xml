@@ -7,8 +7,8 @@
     <string name="labelDetailAct">Detail of Job</string>
     <string name="textPostNewJob">Post New Job</string>
     <string name="subtitleContactos">Contacts :</string>
-    <string name="labelTituloInput">Titulo of Job</string>
-    <string name="labelDesc">Description</string>
+    <string name="labelTituloInput">Job Title</string>
+    <string name="labelDesc">Job Description</string>
     <string name="labelContactos">Contact Numbers</string>
     <string name="btnSave">Save the Job</string>
 </resources>

@@ -1,6 +1,7 @@
 package sinapsysit.com.thejobsproject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 
 import android.support.v7.app.AppCompatActivity;
@@ -85,11 +86,13 @@ public class NuevoJobActivity extends AppCompatActivity {
         StringEntity entity=new StringEntity(mydata.toString());
         entity.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 
+        final ProgressDialog progressDialog= ProgressDialog.show(this, "Enviando ...", "Enviando los datos al servidor...", true);
+
      cliente.post(this,URLPOSTS,entity,"application/json",new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-
+                progressDialog.dismiss();
                 try {
                     if(response.getInt("id")>0){
                         AlertDialog.Builder builder=new AlertDialog.Builder(NuevoJobActivity.this);
@@ -111,8 +114,11 @@ public class NuevoJobActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                progressDialog.dismiss();
                 Log.d("onFailure", "onFailure", throwable);
                 button_save.setEnabled(true);
+                AlertDialog.Builder builder=new AlertDialog.Builder(NuevoJobActivity.this);
+                builder.setTitle("Error al enviar !").setMessage("Ocurrio un error al enviar al servidor!").show();
             }
 
         });

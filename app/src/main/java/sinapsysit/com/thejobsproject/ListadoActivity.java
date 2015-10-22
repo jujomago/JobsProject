@@ -1,7 +1,9 @@
 package sinapsysit.com.thejobsproject;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 
@@ -37,6 +39,7 @@ public class ListadoActivity extends AppCompatActivity {
 
     ListView lista_jobs;
     SimpleCursorAdapter mysimple_adapter;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +49,26 @@ public class ListadoActivity extends AppCompatActivity {
         posts_array=new ArrayList<>();
 
         createComponents();
-        saveJSONToDatabse();
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        builder.setTitle("Sincronizamos ?");
+        builder.setMessage("Quieres sincronizar la Base de datos?");
+
+        builder.setPositiveButton("Si, Sincronizar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                sincronizarData();
+            }
+        });
+        builder.setNegativeButton("No, leer la BD Actual", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                fillListViewFromDB();
+            }
+        });
+        builder.show();
+
+
     }
 
     private void createComponents() {
@@ -92,8 +114,11 @@ public class ListadoActivity extends AppCompatActivity {
 
     private void sincronizarData() {
 
-        posts_array.clear();
+
         lista_jobs.setAdapter(null);
+
+        progressDialog=ProgressDialog.show(this,"Sincronizando ...","Volcando datos de servidor a la Base de datos local...",true,true);
+
         saveJSONToDatabse();
 
     }
@@ -101,6 +126,7 @@ public class ListadoActivity extends AppCompatActivity {
     private void saveJSONToDatabse() {
 
         AsyncHttpClient cliente=new AsyncHttpClient();
+
         cliente.get(URLPOSTS, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
@@ -132,16 +158,17 @@ public class ListadoActivity extends AppCompatActivity {
                     }
 
                 }
+                progressDialog.dismiss();
                 fillListViewFromDB();
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
 //                Log.d("onFailure", "onFailure", throwable);
-                Log.i("Error !","Ocurrio un error al conectarse al servidor!");
+                Log.i("Error !", "Ocurrio un error al conectarse al servidor!");
 //                Toast.makeText(ListadoActivity.class,"")
                 AlertDialog.Builder builder=new AlertDialog.Builder(ListadoActivity.this);
-                builder.setTitle("Error !").setMessage("Ocurrio un error al conectarse al servidor!");
+                builder.setTitle("Error !").setMessage("Ocurrio un error al conectarse al servidor!").show();
             }
 
 
@@ -149,6 +176,7 @@ public class ListadoActivity extends AppCompatActivity {
     }
 
     private void fillListViewFromDB() {
+        posts_array.clear();
 
         String [] columnas={JobDbData._ID,JobDbData.COLUMN_TITLE,JobDbData.COLUMN_DESCRIPTION,JobDbData.COLUMN_POSTED_DATE};
 
@@ -160,6 +188,7 @@ public class ListadoActivity extends AppCompatActivity {
         mysimple_adapter = new SimpleCursorAdapter(this, R.layout.list_item, cursor, from, to, 0);
 
         lista_jobs.setAdapter(mysimple_adapter);
+
 
         while (cursor.moveToNext()){
 
