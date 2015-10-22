@@ -33,8 +33,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/txtDescripcion"
-        android:layout_weight="0.27" />
+        android:id="@+id/txtDescripcion" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -43,18 +42,17 @@
         android:text="@string/labelContactos"
         android:id="@+id/textView4" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/txtContacto" />
-
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Puedes serparar los numeros de contactos por comas &quot;,&quot;"
-        android:id="@+id/textView5"
-        android:layout_gravity="center_horizontal" />
+        android:id="@+id/textView5" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtContacto" />
 
     <Button
         android:layout_width="match_parent"
